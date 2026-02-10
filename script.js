@@ -548,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPuzzle();
   }
 
- function renderPuzzle() {
+function renderPuzzle() {
   clearScreen();
   playMusic("assets/music/yourFace.mp3");
 
@@ -579,38 +579,26 @@ document.addEventListener("DOMContentLoaded", () => {
     img.dataset.correct = i;
     img.draggable = true;
 
-    // ---- MOBILE TOUCH ----
-    img.addEventListener(
-      "touchstart",
-      () => {
-        touchStartIndex = pieces.indexOf(img);
-      },
-      { passive: true }
-    );
+    /* ===== MOBILE TOUCH ===== */
+    img.addEventListener("touchstart", () => {
+      touchStartIndex = pieces.indexOf(img);
+    }, { passive: true });
 
     img.addEventListener("touchend", e => {
       e.preventDefault();
-
       const touch = e.changedTouches[0];
-      const target = document.elementFromPoint(
-        touch.clientX,
-        touch.clientY
-      );
-
-      if (!target) return;
-
-      const targetImg = target.closest(".puzzle-grid img");
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      const targetImg = target?.closest(".puzzle-grid img");
       if (!targetImg) return;
 
       const to = pieces.indexOf(targetImg);
       if (touchStartIndex !== null && to !== -1) {
         swapPieces(pieces, touchStartIndex, to);
       }
-
       touchStartIndex = null;
     });
 
-    // ---- DESKTOP DRAG ----
+    /* ===== DESKTOP DRAG ===== */
     img.ondragstart = e => {
       e.dataTransfer.setData("from", pieces.indexOf(img));
     };
@@ -647,6 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
     app.append(title, grid, skipBtn);
   }
 }
+
 
 
   function isSolved(pieces) {
