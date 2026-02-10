@@ -702,6 +702,25 @@ function renderPuzzle() {
     };
   }
 
+  function swapPieces(pieces, from, to) {
+  if (from === to) return;
+
+  // swap visuals
+  [pieces[from].src, pieces[to].src] =
+    [pieces[to].src, pieces[from].src];
+
+  // swap correctness metadata
+  [pieces[from].dataset.correct, pieces[to].dataset.correct] =
+    [pieces[to].dataset.correct, pieces[from].dataset.correct];
+
+  playSnap();
+
+  if (isSolved(pieces)) {
+    setTimeout(showLevelComplete, 300);
+  }
+}
+
+
 
 
   /*****************
