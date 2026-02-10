@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
     music: null
   };
 
-  const MAX_SKIPS = 9; // debug mode = 9
+  const MAX_SKIPS = 3; // debug mode = 9
   const app = document.getElementById("app");
 
   function clearScreen() {
