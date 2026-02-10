@@ -148,7 +148,7 @@ button.secondary:hover {
   height: 100%;
   cursor: grab;
   user-select: none;
-  touch-action: none;
+  touch-action: manipulation;
   transition: box-shadow .2s, transform .2s;
 }
 
@@ -172,6 +172,10 @@ button.secondary:hover {
 /* =========================
    MOBILE DRAG FIX
    ========================= */
+.puzzle-grid {
+  touch-action: manipulation;
+}
+
 .puzzle-grid img {
   -webkit-user-drag: none;
   -webkit-touch-callout: none;
