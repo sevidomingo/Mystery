@@ -386,11 +386,11 @@ document.addEventListener("DOMContentLoaded", () => {
    *****************/
   const audio = new Audio();
   audio.loop = true;
-  audio.volume = 0.2;
+  audio.volume = 0.1;
 
   function playSnap() {
     const snap = new Audio("assets/sfx/snap.mp3");
-    snap.volume = 0.6;
+    snap.volume = 0.4;
     snap.play().catch(() => {});
   }
 
