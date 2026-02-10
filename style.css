@@ -170,19 +170,12 @@ button.secondary:hover {
 }
 
 /* =========================
-   MOBILE DRAG FIX
+   PUZZLE INTERACTION FIX
    ========================= */
-.puzzle-grid {
-  touch-action: manipulation;
-}
-
 .puzzle-grid img {
-  -webkit-user-drag: none;
-  -webkit-touch-callout: none;
   user-select: none;
-  touch-action: none;
+  -webkit-touch-callout: none;
 }
-
 
 /* =========================
    PUZZLE NOTES
