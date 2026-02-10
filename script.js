@@ -550,7 +550,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
  function renderPuzzle() {
   clearScreen();
-
   playMusic("assets/music/yourFace.mp3");
 
   const title = document.createElement("h2");
@@ -572,62 +571,64 @@ document.addEventListener("DOMContentLoaded", () => {
   grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
 
   const pieces = [];
-let touchStartIndex = null;
+  let touchStartIndex = null;
 
-for (let i = 0; i < pieceCount; i++) {
-  const img = document.createElement("img");
-  img.src = getPieceSrc(state.level, i);
+  for (let i = 0; i < pieceCount; i++) {
+    const img = document.createElement("img");
+    img.src = getPieceSrc(state.level, i);
+    img.dataset.correct = i;
+    img.draggable = true;
 
-  img.dataset.correct = i;
-  img.draggable = true;
+    // ---- MOBILE TOUCH ----
+    img.addEventListener(
+      "touchstart",
+      () => {
+        touchStartIndex = pieces.indexOf(img);
+      },
+      { passive: true }
+    );
 
-  // ---- MOBILE TOUCH SUPPORT ----
-  img.addEventListener("touchstart", e => {
-    touchStartIndex = pieces.indexOf(img);
-  }, { passive: true });
+    img.addEventListener("touchend", e => {
+      e.preventDefault();
 
-  img.addEventListener("touchend", e => {
-    e.preventDefault();
+      const touch = e.changedTouches[0];
+      const target = document.elementFromPoint(
+        touch.clientX,
+        touch.clientY
+      );
 
-    const touch = e.changedTouches[0];
-    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (!target) return;
 
-    if (!target) return;
+      const targetImg = target.closest(".puzzle-grid img");
+      if (!targetImg) return;
 
-    const targetImg = target.closest(".puzzle-grid img");
-    if (!targetImg) return;
+      const to = pieces.indexOf(targetImg);
+      if (touchStartIndex !== null && to !== -1) {
+        swapPieces(pieces, touchStartIndex, to);
+      }
 
-    const to = pieces.indexOf(targetImg);
-    if (touchStartIndex !== null && to !== -1) {
-      swapPieces(pieces, touchStartIndex, to);
-    }
+      touchStartIndex = null;
+    });
 
-    touchStartIndex = null;
-  });
+    // ---- DESKTOP DRAG ----
+    img.ondragstart = e => {
+      e.dataTransfer.setData("from", pieces.indexOf(img));
+    };
 
-  // ---- DESKTOP DRAG SUPPORT ----
-  img.ondragstart = e => {
-    e.dataTransfer.setData("from", pieces.indexOf(img));
-  };
+    img.ondragover = e => e.preventDefault();
 
-  img.ondragover = e => e.preventDefault();
+    img.ondrop = e => {
+      e.preventDefault();
+      const from = Number(e.dataTransfer.getData("from"));
+      const to = pieces.indexOf(img);
+      swapPieces(pieces, from, to);
+    };
 
-  img.ondrop = e => {
-    e.preventDefault();
-    const from = Number(e.dataTransfer.getData("from"));
-    const to = pieces.indexOf(img);
-    swapPieces(pieces, from, to);
-  };
+    img.oncontextmenu = e => e.preventDefault();
 
-  // ---- BLOCK IMAGE MENU ----
-  img.oncontextmenu = e => e.preventDefault();
-
-  pieces.push(img);
-  grid.appendChild(img);
-}
-
+    pieces.push(img);
+    grid.appendChild(img);
   }
-
 
   shufflePieces(pieces);
 
@@ -645,32 +646,8 @@ for (let i = 0; i < pieceCount; i++) {
   } else {
     app.append(title, grid, skipBtn);
   }
-
 }
 
-
-  function swapPieces(arr, from, to) {
-    if (from === to) return;
-
-    const a = arr[from];
-    const b = arr[to];
-
-    // swap src
-    [a.src, b.src] = [b.src, a.src];
-
-    // swap correct index metadata
-    [a.dataset.correct, b.dataset.correct] =
-      [b.dataset.correct, a.dataset.correct];
-
-    // snap sound if either piece just became correct
-    if (from === Number(a.dataset.correct)) playSnap();
-    if (to === Number(b.dataset.correct)) playSnap();
-
-    // solved?
-    if (isSolved(arr)) {
-      setTimeout(showLevelComplete, 400);
-    }
-}
 
   function isSolved(pieces) {
     return pieces.every((img, index) =>
