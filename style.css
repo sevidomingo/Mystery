@@ -1,0 +1,309 @@
+/* =========================
+   ROOT VARIABLES
+   ========================= */
+:root {
+  --bg: #05070f;
+  --card: #0f172a;
+  --blue: #4da3ff;
+  --glow: rgba(77,163,255,.7);
+}
+
+
+/* =========================
+   GLOBAL RESET & BASE
+   ========================= */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #10182f, var(--bg));
+  color: #e5e7eb;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+
+/* =========================
+   APP LAYOUT
+   ========================= */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#app h2 {
+  margin-bottom: 1rem;
+}
+
+#app button {
+  margin-top: 1rem;
+}
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+button {
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  background: #1f2937;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover:not(:disabled) {
+  background: var(--blue);
+  box-shadow: 0 0 15px var(--glow);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+button.secondary:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+
+/* =========================
+   MENU
+   ========================= */
+.menu-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+
+/* =========================
+   INTRO SCENE
+   ========================= */
+.intro-box {
+  max-width: 520px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  animation: fadeIn 0.8s ease;
+  transform: translateY(-5vh);
+}
+
+.intro-text {
+  white-space: pre-line;
+  margin-bottom: 1.2rem;
+}
+
+.intro-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.intro-options button {
+  flex: 1;
+}
+
+
+/* =========================
+   PUZZLE GRID
+   ========================= */
+.puzzle-grid {
+  display: grid;
+  gap: 4px;
+  width: 60vmin;
+  height: 60vmin;
+  max-width: 420px;
+  max-height: 420px;
+}
+
+.puzzle-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+
+/* =========================
+   PUZZLE PIECES (LEGACY / FUTURE)
+   ========================= */
+.piece {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: box-shadow .2s, transform .2s;
+}
+
+.piece.dragging {
+  opacity: 0.7;
+  cursor: grabbing;
+}
+
+.piece.correct {
+  box-shadow: 0 0 20px var(--glow);
+}
+
+.piece.locked {
+  cursor: default;
+}
+
+.slot {
+  position: absolute;
+}
+
+
+/* =========================
+   PUZZLE NOTES
+   ========================= */
+.puzzle-note {
+  margin: 0.5rem 0 1.25rem;
+  font-style: italic;
+  color: var(--blue);
+  opacity: 0.85;
+  background: rgba(0,0,0,.5);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  max-width: 420px;
+}
+
+.note {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  background: rgba(0,0,0,.5);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-style: italic;
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+
+/* =========================
+   CONTROLS
+   ========================= */
+.controls {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+#continueBtn.ready {
+  background: var(--blue);
+  box-shadow: 0 0 25px var(--glow);
+}
+
+
+/* =========================
+   LEVEL COMPLETE OVERLAY
+   ========================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup {
+  background: var(--card);
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0,0,0,.6);
+  animation: fadeIn 0.5s ease;
+}
+
+.popup p {
+  margin-bottom: 1.2rem;
+}
+
+
+/* =========================
+   FINALE SCREEN
+   ========================= */
+.finale {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.final-image {
+  max-width: 70vw;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 0 40px var(--glow);
+}
+
+
+/* =========================
+   LETTER READABILITY FIX
+   ========================= */
+.letter {
+  max-width: 720px;
+  margin: 80px auto;
+  padding: 2.5rem 2rem;
+
+  background: rgba(0,0,0,0.25);
+  border-radius: 20px;
+
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.letter p {
+  margin-bottom: 1.2em;
+}
+
+.letter em {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.letter strong {
+  font-weight: 600;
+}
+
+
+/* =========================
+   LETTER CONTROLS
+   ========================= */
+.letter-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
