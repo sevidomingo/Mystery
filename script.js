@@ -639,9 +639,12 @@ function renderPuzzle() {
 
 
   function isSolved(pieces) {
-    return pieces.every((img, index) =>
-      Number(img.dataset.correct) === index
-    );
+    return pieces.every((img, index) => {
+      const srcIndex = Number(
+        img.src.split("/").pop().replace(".png", "")
+      );
+      return srcIndex === index;
+    });
   }
 
 
