@@ -335,8 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
         I <strong>wambamtripledamn love you</strong>, Ji.<br>
         — <em>Sevi</em>
       </p>
-
-      <p class="closing">This is where it ends.</p>
     `
   }
 };
