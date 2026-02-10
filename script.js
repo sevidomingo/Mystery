@@ -447,9 +447,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return btn;
   }
 
+  let lastDoneIndex = -1;
+
   function getRandomDoneMessage() {
-    return DONE_MESSAGES[Math.floor(Math.random() * DONE_MESSAGES.length)];
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * DONE_MESSAGES.length);
+    } while (idx === lastDoneIndex);
+  
+    lastDoneIndex = idx;
+    return DONE_MESSAGES[idx];
   }
+
 
   /*****************
    * MENU
@@ -576,7 +585,7 @@ function renderPuzzle() {
   for (let i = 0; i < pieceCount; i++) {
     const img = document.createElement("img");
     img.src = getPieceSrc(state.level, i);
-    img.dataset.correct = i;
+    // img.dataset.correct = i;
     img.draggable = true;
 
     /* ===== MOBILE TOUCH ===== */
@@ -651,15 +660,11 @@ function renderPuzzle() {
   function shufflePieces(pieces) {
     for (let i = pieces.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-
-      // swap visuals only
       [pieces[i].src, pieces[j].src] =
         [pieces[j].src, pieces[i].src];
-
-      [pieces[i].dataset.correct, pieces[j].dataset.correct] =
-        [pieces[j].dataset.correct, pieces[i].dataset.correct];
     }
   }
+
 
   function nextLevel() {
     state.level++;
@@ -684,44 +689,37 @@ function renderPuzzle() {
   function showLevelComplete() {
     const overlay = document.createElement("div");
     overlay.className = "overlay";
-
+  
     const message = getRandomDoneMessage();
-
+  
     overlay.innerHTML = `
       <div class="popup">
         <p><strong>${message}</strong></p>
         <button id="nextLevelBtn">Let’s go</button>
       </div>
     `;
-
+  
     document.body.appendChild(overlay);
-
+  
     document.getElementById("nextLevelBtn").onclick = () => {
       overlay.remove();
       nextLevel();
     };
   }
 
+
   function swapPieces(pieces, from, to) {
-  if (from === to) return;
-
-  // swap visuals
-  [pieces[from].src, pieces[to].src] =
-    [pieces[to].src, pieces[from].src];
-
-  // swap correctness metadata
-  [pieces[from].dataset.correct, pieces[to].dataset.correct] =
-    [pieces[to].dataset.correct, pieces[from].dataset.correct];
-
-  playSnap();
-
-  if (isSolved(pieces)) {
-    setTimeout(showLevelComplete, 300);
+    if (from === to) return;
+  
+    [pieces[from].src, pieces[to].src] =
+      [pieces[to].src, pieces[from].src];
+  
+    playSnap();
+  
+    if (isSolved(pieces)) {
+      setTimeout(showLevelComplete, 300);
+    }
   }
-}
-
-
-
 
   /*****************
    * FINALE
