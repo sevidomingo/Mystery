@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "Done! Good job!",
     "Congrats! Woo!",
     "Galing :)) I'm proud",
-    "That’s my pretty boy, hehe",
+    "That's my pretty boy, hehe",
     "Nice work 💙"
   ];
 
@@ -588,7 +588,7 @@ function renderPuzzle() {
       e.preventDefault();
       const touch = e.changedTouches[0];
       const target = document.elementFromPoint(touch.clientX, touch.clientY);
-      const targetImg = target?.closest(".puzzle-grid img");
+      const targetImg = target && target.closest(".puzzle-grid img");
       if (!targetImg) return;
 
       const to = pieces.indexOf(targetImg);
