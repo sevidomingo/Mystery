@@ -572,31 +572,60 @@ document.addEventListener("DOMContentLoaded", () => {
   grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
 
   const pieces = [];
+let touchStartIndex = null;
 
-  for (let i = 0; i < pieceCount; i++) {
-    const img = document.createElement("img");
-    img.src = getPieceSrc(state.level, i);
+for (let i = 0; i < pieceCount; i++) {
+  const img = document.createElement("img");
+  img.src = getPieceSrc(state.level, i);
 
-    img.dataset.correct = i;
-    img.dataset.imgIndex = i;
+  img.dataset.correct = i;
+  img.draggable = true;
 
-    img.draggable = true;
+  // ---- MOBILE TOUCH SUPPORT ----
+  img.addEventListener("touchstart", e => {
+    touchStartIndex = pieces.indexOf(img);
+  }, { passive: true });
 
-    img.ondragstart = e => {
-      e.dataTransfer.setData("from", pieces.indexOf(img));
-    };
+  img.addEventListener("touchend", e => {
+    e.preventDefault();
 
-    img.ondragover = e => e.preventDefault(); // 🔑 REQUIRED
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
 
-    img.ondrop = e => {
-      e.preventDefault();
-      const from = Number(e.dataTransfer.getData("from"));
-      const to = pieces.indexOf(img);
-      swapPieces(pieces, from, to);
-    };
+    if (!target) return;
 
-    pieces.push(img);
-    grid.appendChild(img);
+    const targetImg = target.closest(".puzzle-grid img");
+    if (!targetImg) return;
+
+    const to = pieces.indexOf(targetImg);
+    if (touchStartIndex !== null && to !== -1) {
+      swapPieces(pieces, touchStartIndex, to);
+    }
+
+    touchStartIndex = null;
+  });
+
+  // ---- DESKTOP DRAG SUPPORT ----
+  img.ondragstart = e => {
+    e.dataTransfer.setData("from", pieces.indexOf(img));
+  };
+
+  img.ondragover = e => e.preventDefault();
+
+  img.ondrop = e => {
+    e.preventDefault();
+    const from = Number(e.dataTransfer.getData("from"));
+    const to = pieces.indexOf(img);
+    swapPieces(pieces, from, to);
+  };
+
+  // ---- BLOCK IMAGE MENU ----
+  img.oncontextmenu = e => e.preventDefault();
+
+  pieces.push(img);
+  grid.appendChild(img);
+}
+
   }
 
 
